@@ -1,0 +1,4 @@
+[routers]
+csr1000 ansible_host=172.20.10.7
+#csr1000voisin ansible_host=172.20.10.8
+
