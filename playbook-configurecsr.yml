@@ -41,3 +41,17 @@
             description: "NDIAYE - 192.168.4.0/24"
             enabled: true
         state: merged
+    # Suppression du pool DHCP existant pour éviter les erreurs si on relance
+    - name: Suppression du pool DHCP existant
+      cisco.ios.ios_config:
+        lines:
+          - no ip dhcp pool LAN_ENTREPRISE
+
+    # Configuration du serveur DHCP
+    - name: Configuration du serveur DHCP
+      cisco.ios.ios_config:
+        lines:
+          - network 192.168.2.0 255.255.255.0
+          - default-router 192.168.2.1
+          - dns-server 8.8.8.8
+        parents: ip dhcp pool LAN_ENTREPRISE
