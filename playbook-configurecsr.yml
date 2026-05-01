@@ -55,3 +55,32 @@
           - default-router 192.168.2.1
           - dns-server 8.8.8.8
         parents: ip dhcp pool LAN_ENTREPRISE
+    # Interface WAN en nat outside
+    - name: Configuration NAT outside sur GigabitEthernet1
+      cisco.ios.ios_config:
+        lines:
+          - ip nat outside
+        parents: interface GigabitEthernet1
+
+    # Interfaces LAN en nat inside avec loop
+    - name: Configuration NAT inside sur GigabitEthernet 2 3 et 4
+      cisco.ios.ios_config:
+        lines:
+          - ip nat inside
+        parents: "interface GigabitEthernet{{ item }}"
+      loop:
+        - 2
+        - 3
+        - 4
+
+    # ACL pour le NAT dynamique
+    - name: Configuration de l ACL pour le NAT
+      cisco.ios.ios_config:
+        lines:
+          - access-list 1 permit 192.168.0.0 0.0.255.255
+
+    # Activation du PAT dynamique
+    - name: Activation du PAT dynamique
+      cisco.ios.ios_config:
+        lines:
+          - ip nat inside source list 1 interface GigabitEthernet1 overload
