@@ -84,3 +84,14 @@
       cisco.ios.ios_config:
         lines:
           - ip nat inside source list 1 interface GigabitEthernet1 overload
+    # PAT par port pour le serveur web (port 80)
+    - name: Configuration PAT port 80 vers serveur web
+      cisco.ios.ios_config:
+        lines:
+          - ip nat inside source static tcp 192.168.3.2 80 interface GigabitEthernet1 80
+
+    # PAT par port pour le serveur SSH (port 22 -> 2222)
+    - name: Configuration PAT port 2222 vers serveur SSH
+      cisco.ios.ios_config:
+        lines:
+          - ip nat inside source static tcp 192.168.4.2 22 interface GigabitEthernet1 2222
