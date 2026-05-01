@@ -1,0 +1,43 @@
+---
+- name: Configuration du routeur CSR1000
+  hosts: csr1000
+  gather_facts: false
+
+  tasks:
+
+    # Configuration des adresses IP (couche 3)
+    - name: Configuration des adresses IP des interfaces
+      cisco.ios.ios_l3_interfaces:
+        config:
+          - name: GigabitEthernet1
+            ipv4:
+              - dhcp:
+                  enable: true
+          - name: GigabitEthernet2
+            ipv4:
+              - address: 192.168.2.1/24
+          - name: GigabitEthernet3
+            ipv4:
+              - address: 192.168.3.1/24
+          - name: GigabitEthernet4
+            ipv4:
+              - address: 192.168.4.1/24
+        state: merged
+
+    # Activation des interfaces et descriptions
+    - name: Activation et description des interfaces
+      cisco.ios.ios_interfaces:
+        config:
+          - name: GigabitEthernet1
+            description: "WAN - DHCP"
+            enabled: true
+          - name: GigabitEthernet2
+            description: "ADJA - 192.168.2.0/24"
+            enabled: true
+          - name: GigabitEthernet3
+            description: "AIDA - 192.168.3.0/24"
+            enabled: true
+          - name: GigabitEthernet4
+            description: "NDIAYE - 192.168.4.0/24"
+            enabled: true
+        state: merged
