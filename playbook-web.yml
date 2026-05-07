@@ -1,0 +1,29 @@
+---
+- name: Installation du serveur web
+  hosts: web
+  gather_facts: false
+  become: yes
+
+  tasks:
+
+    - name: Mise à jour du cache apt
+      ansible.builtin.apt:
+        update_cache: yes
+
+    - name: Installation apache2
+      ansible.builtin.apt:
+        name: apache2
+        state: present
+
+    - name: Copie du site web
+      ansible.builtin.copy:
+        src: files/site_web/
+        dest: /var/www/html/
+        owner: www-data
+        mode: '0600'
+
+    - name: Redémarrage du service apache
+      ansible.builtin.systemd_service:
+        name: apache2
+        state: restarted
+        enabled: yes
